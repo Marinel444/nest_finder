@@ -2,6 +2,10 @@ from datetime import datetime
 from sqlalchemy import ForeignKey, String, Integer, BigInteger, Boolean, DateTime, Numeric
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.db.models.filter_group import FilterGroup
 
 
 class User(Base):
@@ -13,6 +17,10 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     subscriptions: Mapped[list["Subscription"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
+
+    filter_groups: Mapped[list["FilterGroup"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
 

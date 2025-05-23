@@ -2,6 +2,10 @@ from datetime import datetime
 from sqlalchemy import ForeignKey, String, Integer, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .advertisement import Advertisement
 
 
 class Country(Base):
@@ -12,6 +16,9 @@ class Country(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     cities: Mapped[list["City"]] = relationship(
+        back_populates="country", cascade="all, delete-orphan"
+    )
+    advertisements: Mapped[list["Advertisement"]] = relationship(
         back_populates="country", cascade="all, delete-orphan"
     )
 
@@ -25,3 +32,7 @@ class City(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     country: Mapped["Country"] = relationship(back_populates="cities")
+
+    advertisements: Mapped[list["Advertisement"]] = relationship(
+        back_populates="city", cascade="all, delete-orphan"
+    )

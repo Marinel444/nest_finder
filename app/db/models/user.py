@@ -5,7 +5,7 @@ from app.db.base import Base
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from app.db.models.filter_group import FilterGroup
+    from app.db.models import FilterGroup, Notification
 
 
 class User(Base):
@@ -21,6 +21,9 @@ class User(Base):
     )
 
     filter_groups: Mapped[list["FilterGroup"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
+    notifications: Mapped[list["Notification"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
 
